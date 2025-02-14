@@ -22,7 +22,7 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Define a cor de fundo
+# Define a cor de fundo como '#282c34' (cinza escuro)
 st.markdown(
     """
     <style>
@@ -40,9 +40,9 @@ st.sidebar.image("https://github.com/dePauloCardoso/streamlit_app/blob/main/Logo
 # Interface Streamlit
 st.sidebar.title("Consulta de Produtos")
 
-# Inicializa session_state
-if 'filtros' not in st.session_state:
-    st.session_state.filtros = {
+# Inicializa session_state se não existir
+if "filters" not in st.session_state:
+    st.session_state["filters"] = {
         "cod_insersao": "",
         "cod_sku": "",
         "segmento": "",
@@ -52,57 +52,48 @@ if 'filtros' not in st.session_state:
         "personalizacao": ""
     }
 
-# Campos de entrada para os filtros
+# Função para atualizar os filtros
 def atualiza_filtros():
-    st.session_state.filtros.update({
-        "cod_insersao": cod_insersao,
-        "cod_sku": cod_sku,
-        "segmento": segmento,
-        "serie": serie,
-        "envio": envio,
-        "usuario": usuario,
-        "personalizacao": personalizacao
-    })
+    st.session_state["filters"] = {
+        "cod_insersao": st.session_state.cod_insersao,
+        "cod_sku": st.session_state.cod_sku,
+        "segmento": st.session_state.segmento,
+        "serie": st.session_state.serie,
+        "envio": st.session_state.envio,
+        "usuario": st.session_state.usuario,
+        "personalizacao": st.session_state.personalizacao
+    }
 
-    st.experimental_rerun()
-
-cod_insersao = st.sidebar.text_input("Código de Inserção", value=st.session_state.filtros["cod_insersao"], on_change=atualiza_filtros)
-cod_sku = st.sidebar.text_input("Código SKU", value=st.session_state.filtros["cod_sku"], on_change=atualiza_filtros)
+# Campos de entrada para os filtros
+cod_insersao = st.sidebar.text_input("Código de Inserção", key="cod_insersao", on_change=atualiza_filtros)
+cod_sku = st.sidebar.text_input("Código SKU", key="cod_sku", on_change=atualiza_filtros)
 
 # Dropdowns para os filtros
 segmento_options = ["", "INF", "FUND AI", "FUND AF", "EM", "PV", "VÁRIOS"]
-segmento = st.sidebar.selectbox("Segmento", segmento_options, index=segmento_options.index(st.session_state.filtros["segmento"]), on_change=atualiza_filtros)
+segmento = st.sidebar.selectbox("Segmento", segmento_options, key="segmento", on_change=atualiza_filtros)
 
-serie_dict = {
-    "INF": ["", "INF I", "INF II", "INF III", "INF IV", "INF V"],
-    "FUND AI": ["", "1O ANO", "2O ANO", "3O ANO", "4O ANO", "5O ANO"],
-    "FUND AF": ["", "6O ANO", "7O ANO", "8O ANO", "9O ANO"],
-    "EM": ["", "1A SERIE", "2A SERIE", "3A SERIE"],
-    "PV": ["", "APROVA +", "ELETIVAS", "SEMI"],
-    "VÁRIOS": ["", "VARIOS"]
-}
-serie_options = serie_dict.get(segmento, [""])
-serie = st.sidebar.selectbox("Série", serie_options, index=serie_options.index(st.session_state.filtros["serie"]), on_change=atualiza_filtros)
+serie_options = ["", "INF I", "INF II", "INF III", "INF IV", "INF V", "1O ANO", "2O ANO", "3O ANO", "4O ANO", "5O ANO", "6O ANO", "7O ANO", "8O ANO", "9O ANO", "1A SERIE", "2A SERIE", "3A SERIE", "APROVA +", "ELETIVAS", "SEMI", "VARIOS"]
+serie = st.sidebar.selectbox("Série", serie_options, key="serie", on_change=atualiza_filtros)
 
 envio_options = ["", "V1", "V2", "V3", "V4"]
-envio = st.sidebar.selectbox("Envio", envio_options, index=envio_options.index(st.session_state.filtros["envio"]), on_change=atualiza_filtros)
+envio = st.sidebar.selectbox("Envio", envio_options, key="envio", on_change=atualiza_filtros)
 
 usuario_options = ["", "Aluno", "Professor"]
-usuario = st.sidebar.selectbox("Usuário", usuario_options, index=usuario_options.index(st.session_state.filtros["usuario"]), on_change=atualiza_filtros)
+usuario = st.sidebar.selectbox("Usuário", usuario_options, key="usuario", on_change=atualiza_filtros)
 
-personalizacao_options = ["", "CAMILA MOREIRA", "CCPA", "CELLULA MATER","DOM BOSCO", "DOM BOSCO BALSAS", "ELO", "FATO", "FILOMENA", 
-                        "GABARITO MG", "GABARITO RS", "MACK", "MAXX JUNIOR", "MELLO DANTE", "REDE AGNUS", "REDE VIVO", "REFERENCIAL", 
-                        "ROSALVO", "SAE", "SANTO ANJO", "SECULO", "STATUS", "TAMANDARE"]
-personalizacao = st.sidebar.selectbox("Personalização", personalizacao_options, index=personalizacao_options.index(st.session_state.filtros["personalizacao"]), on_change=atualiza_filtros)
+personalizacao_options = ["", "CAMILA MOREIRA", "CCPA", "CELLULA MATER","DOM BOSCO", "DOM BOSCO BALSAS", "ELO", "FATO", "FILOMENA", "GABARITO MG", "GABARITO RS", "MACK", "MAXX JUNIOR", "MELLO DANTE", "REDE AGNUS", "REDE VIVO", "REFERENCIAL", "ROSALVO", "SAE", "SANTO ANJO", "SECULO", "STATUS", "TAMANDARE"]
+personalizacao = st.sidebar.selectbox("Personalização", personalizacao_options, key="personalizacao", on_change=atualiza_filtros)
 
-# Botão para limpar filtros
+# Botão para limpar os filtros
 def limpar_filtros():
-    st.session_state.filtros = {key: "" for key in st.session_state.filtros}
-    st.experimental_rerun()
+    for key in st.session_state["filters"]:
+        st.session_state[key] = ""
+    atualiza_filtros()
+
 st.sidebar.button("Limpar Filtros", on_click=limpar_filtros)
 
-# Consulta a API com os filtros atuais
-produtos = consultar_api(**st.session_state.filtros)
+# Consulta a API com os filtros
+produtos = consultar_api(**st.session_state["filters"])
 
 # Exibe os resultados em tabela
 if produtos:
