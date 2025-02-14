@@ -49,8 +49,8 @@ cod_sku = st.sidebar.text_input("Código SKU")
 segmento_options = ["", "INF", "FUND AI", "FUND AF", "EM", "PV", "VÁRIOS"]  # Opções para o dropdown de segmento
 segmento = st.sidebar.selectbox("Segmento", segmento_options)
 
-serie_options = ["", "INF I", "INF II", "INF III", "INF IV", "INF V", "1o ANO", "2o ANO", "3o ANO", "4o ANO", "5o ANO",
-                "6o ANO", "7o ANO", "8o ANO", "9o ANO", "1A SERIE", "2A SERIE", "3A SERIE", "APROVA +", "ELETIVAS", "SEMI", "VARIOS"]  # Opções para o dropdown de série
+serie_options = ["", "INF I", "INF II", "INF III", "INF IV", "INF V", "1O ANO", "2O ANO", "3O ANO", "4O ANO", "5O ANO",
+                "6O ANO", "7O ANO", "8O ANO", "9O ANO", "1A SERIE", "2A SERIE", "3A SERIE", "APROVA +", "ELETIVAS", "SEMI", "VARIOS"]  # Opções para o dropdown de série
 serie = st.sidebar.selectbox("Série", serie_options)
 
 envio_options = ["", "V1", "V2", "V3", "V4"]  # Opções para o dropdown de envio
