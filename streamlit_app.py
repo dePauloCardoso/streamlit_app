@@ -36,7 +36,7 @@ st.markdown(
 )
 
 # Exibe a imagem
-st.sidebar.image(r"C:\Users\paulocardoso\OneDrive - ARCO Educacao\Área de Trabalho\Docs_Paulo\Paulo\Pessoal\Python\apiProject\Logo_SAE.png")
+st.sidebar.image(r"C:\Users\paulocardoso\OneDrive - ARCO Educacao\Área de Trabalho\Docs_Paulo\Paulo\Pessoal\Python\streamlitApp\Logo_SAE.png")
 
 # Interface Streamlit
 st.sidebar.title("Consulta de Produtos")
