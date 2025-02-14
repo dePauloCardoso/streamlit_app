@@ -70,14 +70,9 @@ personalizacao_options = ["", "CAMILA MOREIRA", "CCPA", "CELLULA MATER", "DOM BO
                         "ROSALVO", "SAE", "SANTO ANJO", "SECULO", "STATUS", "TAMANDARE"]
 personalizacao = st.sidebar.selectbox("Personalização", personalizacao_options)
 
-
-# Botão para limpar os filtros
-def limpar_filtros():
-    for key in st.session_state["filters"]:
-        st.session_state[key] = ""
-    atualiza_filtros()
-
-st.sidebar.button("Limpar Filtros", on_click=limpar_filtros)
+# Botão para limpar filtros
+if st.sidebar.button("Limpar Filtros"):
+    st.experimental_rerun()
 
 # Consulta inicial
 produtos = consultar_api(
