@@ -36,7 +36,7 @@ st.markdown(
 )
 
 # Exibe a imagem
-st.sidebar.image("https://github.com/dePauloCardoso/streamlit_app/blob/main/Logo_SAE.png")
+st.sidebar.image("https://github.com/dePauloCardoso/streamlit_app/commit/867efe6a72b45c1755a50790c34e05108c2b51bf")
 
 # Interface Streamlit
 st.sidebar.title("Consulta de Produtos")
