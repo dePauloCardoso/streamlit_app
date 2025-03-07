@@ -1,19 +1,15 @@
 import streamlit as st
-import requests
 import pandas as pd
 
-# URL da sua API FastAPI
-API_URL = "https://api-streamlit-7h4o.onrender.com"
-
-# Função para consultar a API
-def consultar_api(**kwargs):  # Aceita qualquer número de argumentos nomeados
-    params = {key: value for key, value in kwargs.items() if value}
-    response = requests.get(f"{API_URL}/produtos", params=params, verify=False)
-    if response.status_code == 200:
-        return response.json()
-    return None
-
 st.set_page_config(layout="wide", initial_sidebar_state="expanded")
+
+# Carrega o CSV
+@st.cache_data  # Usando cache para evitar recarregamento desnecessário
+def load_data():
+    return pd.read_csv("data/ppg_sae_2025.csv", sep=';')  # Substitua 'seu_arquivo.csv' pelo nome correto
+
+df = load_data()
+
 
 # Define a cor de fundo
 st.markdown(
@@ -88,25 +84,32 @@ def limpar_filtros():
 
 st.sidebar.button("Limpar Filtros", on_click=limpar_filtros)
 
-# Consulta automática com os filtros
-produtos = consultar_api(
-    cod_insersao=st.session_state.cod_insersao,
-    cod_sku=st.session_state.cod_sku,
-    segmento=st.session_state.segmento,
-    serie=st.session_state.serie,
-    envio=st.session_state.envio,
-    usuario=st.session_state.usuario,
-    personalizacao=st.session_state.personalizacao
-)
+# Aplica os filtros diretamente no DataFrame
+filtro = pd.Series([True] * len(df))  # Inicializa com todos verdadeiros
+if st.session_state.cod_insersao:
+    filtro &= df['cod_insersao'].astype(str).str.contains(st.session_state.cod_insersao, na=False)
+if st.session_state.cod_sku:
+    filtro &= df['cod_sku'].astype(str).str.contains(st.session_state.cod_sku, na=False)
+if st.session_state.segmento:
+    filtro &= df['segmento'] == st.session_state.segmento
+if st.session_state.serie:
+    filtro &= df['serie'] == st.session_state.serie
+if st.session_state.envio:
+    filtro &= df['envio'] == st.session_state.envio
+if st.session_state.usuario:
+    filtro &= df['usuario'] == st.session_state.usuario
+if st.session_state.personalizacao:
+    filtro &= df['personalizacao'] == st.session_state.personalizacao
+
+df_filtrado = df[filtro]
 
 # Exibe os resultados em tabela
-if produtos:
-    df = pd.DataFrame(produtos)
+if not df_filtrado.empty:
     colunas_desejadas = ['cod_insersao', 'descricao_kit', 'cod_sku',
-                         'descricao_sku', 'segmento', 'serie', 'volume', 'envio',
-                         'frequencia', 'usuario', 'info_produto', 'tipo_material',
-                         'classificacao_produto', 'personalizacao']
-    df = df[colunas_desejadas]
-    st.dataframe(df, use_container_width=True)
+                        'descricao_sku', 'segmento', 'serie', 'volume', 'envio',
+                        'frequencia', 'usuario', 'info_produto', 'tipo_material',
+                        'classificacao_produto', 'personalizacao']
+    df_filtrado = df_filtrado[colunas_desejadas]
+    st.dataframe(df_filtrado, use_container_width=True)
 else:
     st.write("Nenhum produto encontrado para estes filtros.")
